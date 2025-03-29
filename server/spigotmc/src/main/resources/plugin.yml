@@ -3,4 +3,5 @@ version: ${version}
 main: io.github.mcengine.spigotmc.survival.MCEngineSurvival
 author: MCEngine
 description: MCEngine Survival
+depend: [ViaVersion]
 api-version: 1.18
