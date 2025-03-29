@@ -31,6 +31,8 @@ allprojects {
         maven { url 'https://oss.sonatype.org/content/repositories/central' }
 
         maven { url 'https://repo.onarandombox.com/content/groups/public/' }
+
+        maven { url 'https://repo.viaversion.com' }
     }
 }
 
@@ -125,17 +127,15 @@ subprojects {
     }
 }
 
-// Root project dependencies
+// Root project build.gradle
 dependencies {
     implementation project(path: ':mcengine-survival-api', configuration: 'shadow')
     implementation project(path: ':common', configuration: 'shadow')
+    implementation project(path: ':nms', configuration: 'shadow')
 
-    // Dynamically include all server projects
-    rootProject.subprojects.each { subproject ->
-        if (subproject.name != 'mcengine-survival-api' && subproject.name != 'common') {
-            def serverProjectPath = subproject.path.startsWith(':server') ? subproject.path : ":server:${subproject.name}"
-            implementation project(path: serverProjectPath, configuration: 'shadow')
-        }
+    // Include all server subprojects like :server:spigotmc
+    rootProject.project(':server').subprojects.each { serverSubproject ->
+        implementation project(path: serverSubproject.path, configuration: 'shadow')
     }
 }
 

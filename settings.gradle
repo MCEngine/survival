@@ -1,12 +1,10 @@
 rootProject.name = 'mcengine-survival'
 
-// Define base directories for subprojects
-def coreProjects = ['mcengine-survival-api', 'common']
+def coreProjects = ['mcengine-survival-api', 'common', 'nms']
+coreProjects.each { include ":$it" }
 
-def serverProjects = ['spigotmc']
-
-// Include core projects
-coreProjects.each { include it }
-
-// Dynamically include server projects
-serverProjects.each { include "server:${it}" }
+// Automatically include all subdirectories in 'server'
+file('server').eachDir { dir ->
+    include ":server:${dir.name}"
+    project(":server:${dir.name}").projectDir = dir
+}
