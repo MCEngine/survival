@@ -1,0 +1,6 @@
+name: MCEngineSurvival
+version: ${version}
+main: io.github.mcengine.spigotmc.survival.MCEngineSurvival
+author: MCEngine
+description: MCEngine Survival
+api-version: 1.18

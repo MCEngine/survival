@@ -1,0 +1,15 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    // Self Api
+    compileOnly project(":mcengine-survival-api")
+
+    // Server Platform
+    compileOnly 'org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT'
+}
+
+shadowJar {
+    archiveBaseName.set('MCEngineSurvival-Common')
+}
