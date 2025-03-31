@@ -5,6 +5,6 @@ import org.bukkit.entity.Player;
 
 public class MCEngineSurvivalPaperMCCommand_1_21_4 implements INmsCommandHandler {
     public void getVersion(Player player) {
-        player.sendMessage("Hello from 1.21.4");
+        player.sendMessage("Hello from PaperMC 1.21.4");
     }
 }
