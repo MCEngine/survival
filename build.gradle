@@ -65,6 +65,28 @@ subprojects {
         destinationDirectory.set(file("${rootProject.buildDir}/libs"))
     }
 
+    // Dependencies for server-related projects
+    def serverPlatforms = ['spigotmc', 'papermc']
+    serverPlatforms.each { platform ->
+        if (project.path == ":server:${platform}:engine") {
+            dependencies {
+                implementation project(path: ':mcengine-survival-api', configuration: 'shadow')
+                implementation project(path: ':nms', configuration: 'shadow')
+                implementation project(path: ':common', configuration: 'shadow')
+
+                def platformDir = rootProject.file("server/${platform}")
+                if (platformDir.exists()) {
+                    platformDir.eachDir { versionDir ->
+                        if (versionDir.name != 'engine') {
+                            def versionPath = ":server:${platform}:${versionDir.name}"
+                            implementation project(path: versionPath, configuration: 'shadow')
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // {SpigotMC|PaperMC}-specific resource processing (for plugin.yml)
     if (project.name == 'engine') {
         processResources {
@@ -147,13 +169,6 @@ dependencies {
                     project(enginePath).dependencies {
                         implementation project(path: versionPath, configuration: 'shadow')
                     }
-                }
-            }
-
-            // Add core modules to engine
-            project(enginePath).dependencies {
-                ['mcengine-survival-api', 'common', 'nms'].each {
-                    implementation project(path: ":$it", configuration: 'shadow')
                 }
             }
 
