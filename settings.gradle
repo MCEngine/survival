@@ -1,7 +1,8 @@
 rootProject.name = 'mcengine-survival'
 
 // Include core projects
-['mcengine-survival-api', 'common', 'nms'].each {
+def coreProjectModules = ['mcengine-survival-api', 'common', 'nms']
+coreProjectModules.each {
     include ":$it"
 }
 
@@ -15,4 +16,5 @@ def includeSubprojects(String platform) {
 }
 
 // Include all subprojects for PaperMC and SpigotMC
-['papermc', 'spigotmc'].each { includeSubprojects(it) }
+def platformModules = ['papermc', 'spigotmc']
+platformModules.each { includeSubprojects(it) }
