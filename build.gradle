@@ -56,7 +56,8 @@ subprojects {
     }
 
     // Ensure version property is assigned correctly
-    version = project.findProperty("${project.name}-version") ?: 'unspecified'
+    def propertyKey = "${project.name.replaceAll('-', '_')}-version"
+    version = project.findProperty(propertyKey) ?: 'unspecified'
 
     // Configure Shadow JAR plugin
     tasks.matching { it.name == 'shadowJar' }.configureEach {
