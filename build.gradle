@@ -59,17 +59,9 @@ subprojects {
     version = project.findProperty("${project.name}-version") ?: 'unspecified'
 
     // Configure Shadow JAR plugin
-    shadowJar {
+    tasks.matching { it.name == 'shadowJar' }.configureEach {
         archiveClassifier = null
         destinationDirectory.set(file("${rootProject.buildDir}/libs"))
-    }
-
-    // Dependencies for server-related projects
-    if (project.path.startsWith(':server:')) {
-        dependencies {
-            implementation project(path: ':mcengine-survival-api', configuration: 'shadow')
-            implementation project(path: ':common', configuration: 'shadow')
-        }
     }
 
     // SpigotMC-specific resource processing (for plugin.yml)
@@ -132,12 +124,16 @@ subprojects {
 
 dependencies {
     // Core modules
-    ['mcengine-survival-api', 'common', 'nms'].each {
+    def coreModules = ['mcengine-survival-api', 'common', 'nms']
+
+    coreModules.each {
         implementation project(path: ":$it", configuration: 'shadow')
     }
 
     // Include all engine subprojects and their version modules
-    ['papermc', 'spigotmc'].each { platform ->
+    def platformModules = ['papermc', 'spigotmc']
+
+    platformModules.each { platform ->
         def platformDir = rootProject.file("server/${platform}")
         def enginePath = ":server:${platform}:engine"
 
