@@ -5,8 +5,6 @@ plugins {
 dependencies {
     // Server Platform
     compileOnly 'org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT'
-
-    compileOnly 'com.viaversion:viaversion-api:5.2.1'
 }
 
 shadowJar {
