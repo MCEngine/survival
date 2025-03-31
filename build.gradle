@@ -64,8 +64,8 @@ subprojects {
         destinationDirectory.set(file("${rootProject.buildDir}/libs"))
     }
 
-    // SpigotMC-specific resource processing (for plugin.yml)
-    if (project.name == 'spigotmc') {
+    // {SpigotMC|PaperMC}-specific resource processing (for plugin.yml)
+    if (project.name == 'engine') {
         processResources {
             def props = [version: version]
             inputs.properties(props)
