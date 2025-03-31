@@ -5,6 +5,19 @@ plugins {
 dependencies {
     compileOnly project(":nms")
     compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
+
+    // Add all :server:papermc subprojects except "engine"
+    def papermcDir = rootProject.file("server/papermc")
+    if (papermcDir.exists()) {
+        papermcDir.eachDir { versionDir ->
+            if (versionDir.name != "engine") {
+                def versionProjectPath = ":server:papermc:${versionDir.name}"
+                if (project(":server:papermc").childProjects.containsKey(versionDir.name)) {
+                    compileOnly project(versionProjectPath)
+                }
+            }
+        }
+    }
 }
 
 shadowJar {

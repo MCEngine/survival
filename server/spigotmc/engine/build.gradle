@@ -3,7 +3,21 @@ plugins {
 }
 
 dependencies {
+    compileOnly project(":nms")
     compileOnly 'org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT'
+
+    // Add all :server:spigotmc subprojects except "engine"
+    def spigotmcDir = rootProject.file("server/spigotmc")
+    if (spigotmcDir.exists()) {
+        spigotmcDir.eachDir { versionDir ->
+            if (versionDir.name != "engine") {
+                def versionProjectPath = ":server:spigotmc:${versionDir.name}"
+                if (project(":server:spigotmc").childProjects.containsKey(versionDir.name)) {
+                    compileOnly project(versionProjectPath)
+                }
+            }
+        }
+    }
 }
 
 shadowJar {
