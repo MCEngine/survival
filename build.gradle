@@ -130,15 +130,39 @@ subprojects {
     }
 }
 
-// Root project build.gradle
 dependencies {
-    implementation project(path: ':mcengine-survival-api', configuration: 'shadow')
-    implementation project(path: ':common', configuration: 'shadow')
-    implementation project(path: ':nms', configuration: 'shadow')
+    // Core modules
+    ['mcengine-survival-api', 'common', 'nms'].each {
+        implementation project(path: ":$it", configuration: 'shadow')
+    }
 
-    // Include all server subprojects like :server:spigotmc
-    rootProject.project(':server').subprojects.each { serverSubproject ->
-        implementation project(path: serverSubproject.path, configuration: 'shadow')
+    // Include all engine subprojects and their version modules
+    ['papermc', 'spigotmc'].each { platform ->
+        def platformDir = rootProject.file("server/${platform}")
+        def enginePath = ":server:${platform}:engine"
+
+        if (platformDir.exists()) {
+            platformDir.eachDir { versionDir ->
+                def versionPath = ":server:${platform}:${versionDir.name}"
+                if (versionDir.name != "engine") {
+                    implementation project(path: versionPath, configuration: 'shadow')
+                    // Add version module to the engine project
+                    project(enginePath).dependencies {
+                        implementation project(path: versionPath, configuration: 'shadow')
+                    }
+                }
+            }
+
+            // Add core modules to engine
+            project(enginePath).dependencies {
+                ['mcengine-survival-api', 'common', 'nms'].each {
+                    implementation project(path: ":$it", configuration: 'shadow')
+                }
+            }
+
+            // Also add engine itself to root fat jar
+            implementation project(path: enginePath, configuration: 'shadow')
+        }
     }
 }
 

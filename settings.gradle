@@ -1,10 +1,18 @@
 rootProject.name = 'mcengine-survival'
 
-def coreProjects = ['mcengine-survival-api', 'common', 'nms']
-coreProjects.each { include ":$it" }
-
-// Automatically include all subdirectories in 'server'
-file('server').eachDir { dir ->
-    include ":server:${dir.name}"
-    project(":server:${dir.name}").projectDir = dir
+// Include core projects
+['mcengine-survival-api', 'common', 'nms'].each {
+    include ":$it"
 }
+
+// Helper to include subprojects in a given path with correct project prefix
+def includeSubprojects(String platform) {
+    file("server/${platform}").eachDir { dir ->
+        def projectPath = ":server:${platform}:${dir.name}"
+        include projectPath
+        project(projectPath).projectDir = dir
+    }
+}
+
+// Include all subprojects for PaperMC and SpigotMC
+['papermc', 'spigotmc'].each { includeSubprojects(it) }
